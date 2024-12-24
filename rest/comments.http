@@ -1,0 +1,34 @@
+###
+GET http://localhost:3000/comments
+
+
+### Parent Comment
+
+POST http://localhost:3000/comments
+Content-Type: application/json
+
+{
+    "text": "second comment",
+    "userId": "1"
+}
+
+
+### Nested Comment
+
+POST http://localhost:3000/comments
+Content-Type: application/json
+
+{
+
+    "text": "I am a nested second comment",
+    "parentId": "1",
+    "userId": "1"
+}
+
+
+
+
+
+###
+GET http://localhost:3000/comments?parentId=12
+
