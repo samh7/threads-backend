@@ -2,11 +2,27 @@
 GET http://localhost:3000/users
 
 
-###
-
+###Create
 POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-    "name": "sampleuse r"
+    "id": "1",
+    "name": "Sila Mwinzi"
+}
+
+### GET
+GET http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "name": "Sila Mwinzi"
+}
+
+### UPDATE
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "name": "Sila Mwinzi"
 }
