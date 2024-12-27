@@ -1,28 +1,28 @@
 ###
-GET http://localhost:3000/users
+GET http://localhost:3200/users
 
 
 ###Create
-POST http://localhost:3000/users
+POST http://localhost:3200/users
 Content-Type: application/json
 
 {
     "id": "1",
-    "name": "Sila Mwinzi"
+    "name": "John Doe"
 }
 
 ### GET
-GET http://localhost:3000/users/1
+GET http://localhost:3200/users/1
 Content-Type: application/json
 
 {
-    "name": "Sila Mwinzi"
+    "name": "John Doe"
 }
 
 ### UPDATE
-PATCH http://localhost:3000/users/1
+PATCH http://localhost:3200/users/1
 Content-Type: application/json
 
 {
-    "name": "Sila Mwinzi"
+    "name": "John Doe"
 }
