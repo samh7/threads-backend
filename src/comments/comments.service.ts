@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { User } from 'src/users/entities/user.entity';
+import { plainToClass, plainToClassFromExist } from 'class-transformer';
 
 @Injectable()
 export class CommentsService {
@@ -15,26 +16,43 @@ export class CommentsService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) { }
+
   async create(createCommentDto: CreateCommentDto) {
+
+    console.log("CreateCommentDtop ", createCommentDto)
+
     const user = await this.userRepository.findOne({
       where: {
-        id: +createCommentDto.userId,
+        id: createCommentDto.userId,
       },
     });
 
-    const comment = await this.commentRepository.findOne({
-      where: {
-        id: +(createCommentDto.parentId ?? -100),
-      },
-    });
 
     if (!user) {
       throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
     }
 
+    if (!createCommentDto.parentId) {
+
+      const commentToCreate = {
+        text: createCommentDto.text,
+        user: user,
+        likes: 0,
+      };
+      return await this.commentRepository.save(commentToCreate);
+    }
+    const comment = await this.commentRepository.findOne({
+      where: {
+        id: createCommentDto.parentId,
+      },
+    });
+
+
+
+
     const commentToCreate = {
       text: createCommentDto.text,
-      parent: comment || null,
+      parent: comment,
       user: user,
       likes: 0,
     };
@@ -50,16 +68,24 @@ export class CommentsService {
 
     return topLevelComments.reverse()
   }
-  async getCommentsByParentId(parentId: number) {
+  async getCommentsByParentId(parentId: string) {
     const commentsByParentId = await this.commentRepository.find({
       where: {
         parent: {
           id: parentId,
+
         },
+
       },
+      relations: ["user"]
     });
 
-    return commentsByParentId.reverse()
+    const returnComments = [...commentsByParentId].reverse()
+
+    return returnComments
+    // return plainToClassFromExist(Comment, returnComments, {
+    //   excludeExtraneousValues: true,
+    // });
   }
 
   findAll() {
