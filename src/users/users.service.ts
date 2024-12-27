@@ -4,26 +4,42 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { hash } from 'bcryptjs';
+import { LoggerService } from 'src/logger/logger.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+    private logger: LoggerService
+  ) { }
 
-  create(createUserDto: CreateUserDto) {
-    // const userToSave: CreateUserDto = {
-    //   name: "Sila Mwinzi"
-    // }
-    return this.usersRepository.save(createUserDto as User);
+  async create(createUserDto: CreateUserDto) {
+    // const hashedPAsswprs =
+    try {
+      const user = await this.usersRepository.save({
+        ...createUserDto,
+        password: await hash(createUserDto.password, 10)
+      } as User
+      );
+      if (!user) {
+        return null
+      }
+      return user
+
+    }
+    catch (err) {
+      this.logger.error(err, null)
+      return null
+    }
   }
 
   findAll() {
     return this.usersRepository.find({});
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await this.usersRepository.find({
       where: {
         id: id,
@@ -31,7 +47,7 @@ export class UsersService {
     });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     const isUser = await this.usersRepository.find({
       where: { id: id },
     });
