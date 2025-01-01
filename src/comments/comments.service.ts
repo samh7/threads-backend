@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, Query } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { User } from 'src/users/entities/user.entity';
 import { plainToClass, plainToClassFromExist } from 'class-transformer';
@@ -60,9 +60,9 @@ export class CommentsService {
   }
 
   async getTopLevelComments() {
-    const topLevelComments: Comment[] = await this.commentRepository.find({
+    const topLevelComments = await this.commentRepository.find({
       where: {
-        parent: null,
+        parent: IsNull()
       },
     });
 
