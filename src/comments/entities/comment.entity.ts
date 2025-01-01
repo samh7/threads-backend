@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   Entity,
   IsNull,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -25,20 +26,18 @@ export class Comment {
     cascade: true,
     eager: true,
   })
+  @JoinColumn() 
   user: User;
 
   @ManyToOne(() => Comment, (comment) => comment.parent, {
     nullable: true,
     // eager: true
   })
+  @JoinColumn() 
   parent: Comment | null;
 
   @Column({ default: 0 })
   likes: number;
 
-  // @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  // createdAt: Date;
 
-  // @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  // updatedAt: Date;
 }
