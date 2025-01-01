@@ -21,14 +21,14 @@ export class CommentsController {
 
   @Post()
   create(@Body() createCommentDto: CreateCommentDto) {
-    console.log(createCommentDto)
+    // console.log(createCommentDto)
     return this.commentsService.create(createCommentDto);
   }
 
   @Get()
   findAll(@Query() queryParams: { parentId: string }) {
     if (queryParams.parentId) {
-      console.log("parent Id, ", queryParams.parentId)
+      // console.log("parent Id, ", queryParams.parentId)
       return this.commentsService.getCommentsByParentId(queryParams.parentId);
     }
     return this.commentsService.getTopLevelComments();

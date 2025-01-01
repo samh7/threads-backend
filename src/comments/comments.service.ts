@@ -19,7 +19,7 @@ export class CommentsService {
 
   async create(createCommentDto: CreateCommentDto) {
 
-    console.log("CreateCommentDtop ", createCommentDto)
+    // console.log("CreateCommentDtop ", createCommentDto)
 
     const user = await this.userRepository.findOne({
       where: {
